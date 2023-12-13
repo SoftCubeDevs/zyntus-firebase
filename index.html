@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Incluye el SDK de Firebase versión 8 para Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <title>Zyntus</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #2f80ed 50%, #4c4c4c 50%);
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: #fff;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        input[type="button"] {
+            background-color: #2f80ed;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        input[type="button"]:hover {
+            background-color: #1f5fb3;
+        }
+
+        @media (max-width: 900px) {
+            form {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="app">
+        <h1 class="text-white">Zyntus</h1>
+        <h2 class="text-white">Your documents to MS Word, MS Power Point, MS Excel, etc.</h2>
+
+        <form v-if="!thanks">
+
+            <h3 style="color: black">Fill From  & Get Price for Free.</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="firstName"><span class="text-danger">*</span>First Name:</label>
+                    <input type="text" id="firstName" :class="errors.firstName ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'" v-model="form.firstName">
+                    <p class="text-danger small">{{errors.firstName}}</p>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="firstName"><span class="text-danger">*</span>Last Name:</label>
+                    <input type="text" id="firstName" :class="errors.lastName ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'" v-model="form.lastName">
+                    <p class="text-danger small">{{errors.lastName}}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="firstName"><span class="text-danger">*</span>Email:</label>
+                    <input type="email" id="email" :class="errors.email ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'" v-model="form.email">
+                    <p class="text-danger small">{{errors.email}}</p>
+                </div>
+                <div class="col-md-6">
+                    <label for="firstName">Phone Number:</label>
+                    <input type="number" id="number" :class="errors.number ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'" v-model="form.number">
+                    <p class="text-danger small">{{errors.number}}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label for="description"><span class="text-danger">*</span>Description:</label>
+                    <textarea id="description" name="description" rows="4" v-model="form.description" :class="errors.description ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'"></textarea>
+                    <p class="text-danger small">{{errors.description}}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="words"><span class="text-danger">*</span>Words Number:</label>
+                    <input type="number" min="0" id="words" :class="errors.wordsNumber ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'" v-model="form.wordsNumber">
+                    <p class="text-danger small">{{errors.wordsNumber}}</p>
+                </div>
+                <div class="col-md-6">
+                    <label for="urgentlyDate">Urgently Date:</label>
+                    <input type="date" id="urgentlyDate" :class="errors.urgentlyDate ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'" v-model="form.urgentlyDate" min="recentlyDate">
+                    <p class="text-danger small">{{errors.urgentlyDate}}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary mt-4 btn-block" @click="createProspect">Quote</button>
+                </div>
+            </div>
+
+        </form>
+
+        <div class="row card card-body p-4" v-if="thanks">
+            <div class="col-12">
+                <h1 class="text-success">Thanks, Soon You Will To Receive Your Quote!</h1>
+            </div>
+        </div>
+    </div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="./js/firestore.js"></script>
+    <script src="./js/index.js"></script>
+
+</body>
+
+</html>

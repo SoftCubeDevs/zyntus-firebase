@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Incluye el SDK de Firebase versión 8 para Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #2f80ed 50%, #4c4c4c 50%);
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: #fff;
+        }
+
+        .bg-card{
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            padding: 20px;;
+        }
+    </style>
+    <div class="container" style="width: 100%; height: 100%;" id="app">
+        <div class="bg-card">
+            <div class="col-12">
+                <h1 class="">Prospects</h1>
+            </div>
+            <div class="col-12 mt-4">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="bg-dark text-white text-center">
+                            <th>ID</th>
+                            <th>Correo</th>
+                            <th>Number</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Words Number</th>
+                            <th>Urgently Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </thead>
+                        <tbody v-for="prospect in prospects">
+                            <td>{{prospect.id}}</td>
+                            <td>{{prospect.email}}</td>
+                            <td>{{prospect.number}}</td>
+                            <td>{{prospect.last_name}}</td>
+                            <td>{{prospect.first_name}}</td>
+                            <td>{{prospect.words_number}}</td>
+                            <td>{{prospect.urgently_date ? new Date(prospect.urgently_date.toDate()).toISOString().substring(0, 10)  : ''}}</td>
+                            <td>{{prospect.status}}</td>
+                            <td>{{prospect.status}}</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Agrega esto a tu archivo HTML -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="../js/firestore.js"></script>
+    <script src="../js/prospects.js"></script>
+    
+</body>
+</html>
